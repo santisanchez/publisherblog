@@ -10,6 +10,9 @@ use App\User;
 
 use Auth;
 use App\Classes\NotifyUser;
+use App\Publisher;
+use App\Classes\NotifyPublisher;
+
 
 class PostsController extends Controller
 {
@@ -56,9 +59,12 @@ class PostsController extends Controller
     $post->author = Auth::user()->name;
     $post->save();
     $post_id = $post->id;
-    
-    $user = User::first();
-    $user->notify(new NotifyUser("There is a new post",$post_id));
+
+    // $user = User::first();
+    // $user->notify(new NotifyUser("There is a new post",$post_id));
+
+    $publisher = Publisher::first();
+    $publisher->notify(new NotifyPublisher("New Post added",$publisher->phone));
 
     return redirect()->route('posts.index');
   }

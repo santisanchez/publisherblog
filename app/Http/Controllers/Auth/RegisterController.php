@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use App\Publisher;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Classes\NotifyPublisher;
+
 
 class RegisterController extends Controller
 {
@@ -28,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = 'posts';
 
     /**
      * Create a new controller instance.
@@ -63,11 +66,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $publisher = Publisher::first();
+        $publisher->notify(new NotifyPublisher("New user Registered!",$publisher->phone));
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role_id' => 3,
         ]);
+
     }
 }
