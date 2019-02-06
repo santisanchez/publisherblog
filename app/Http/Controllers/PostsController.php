@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+
 use App\Post;
+use App\User;
+
 use Auth;
+use App\Classes\NotifyUser;
 
 class PostsController extends Controller
 {
@@ -50,6 +55,10 @@ class PostsController extends Controller
     $post->content = $request->content;
     $post->author = Auth::user()->name;
     $post->save();
+    $post_id = $post->id;
+    
+    $user = User::first();
+    $user->notify(new NotifyUser("There is a new post",$post_id));
 
     return redirect()->route('posts.index');
   }
