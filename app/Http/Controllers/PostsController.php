@@ -9,13 +9,18 @@ use App\Post;
 use App\User;
 
 use Auth;
+use App\Classes\Notify;
 use App\Classes\NotifyUser;
-use App\Publisher;
 use App\Classes\NotifyPublisher;
-
+use App\Publisher;
+use Illuminate\Notifications\Notification;
 
 class PostsController extends Controller
 {
+
+  public function __construct(){
+    $this->middleware('writer')->except('index','show');
+  }
   /**
   * Display a listing of the resource.
   * @author Santiago
@@ -60,13 +65,18 @@ class PostsController extends Controller
     $post->save();
     $post_id = $post->id;
 
-    // $user = User::first();
-    // $user->notify(new NotifyUser("There is a new post",$post_id));
+    $users = User::where('role_id','3')->get();
+    $this->sendNotification(new NotifyUser("There is a new post!",$post_id),$user);
 
     $publisher = Publisher::first();
-    $publisher->notify(new NotifyPublisher("New Post added",$publisher->phone));
+    $this->sendNotification(new NotifyPublisher("New post added",$publisher->phone_number),$publisher);
 
     return redirect()->route('posts.index');
+  }
+
+  private function sendNotification(Notify $notify,$entity)
+  {
+    $entity->notify($notify);
   }
 
   /**

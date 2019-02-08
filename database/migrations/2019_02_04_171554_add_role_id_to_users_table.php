@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddRoleIdToUsersTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -14,7 +15,7 @@ class AddRoleIdToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('role_id')->after('password')->default('3');
+            $table->integer('role_id')->after('password')->default(3);
         });
     }
 

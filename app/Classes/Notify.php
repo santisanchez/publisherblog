@@ -13,14 +13,15 @@ class Notify extends Notification implements INotification
 {
   use Queueable;
 
+protected $my_notifiable;
   /**
    * Create a new notification instance.
    *
    * @return void
    */
-  public function __construct(INotification $notification)
+  public function __construct($notifiable)
   {
-
+    $my_notifiable = $notifiable;
   }
 
   /**
@@ -42,9 +43,10 @@ class Notify extends Notification implements INotification
    */
   public function toMail($notifiable)
   {
+
       return (new MailMessage)
                   ->line('The introduction to the notification.')
                   ->action('Notification Action', url('/'))
                   ->line('Thank you for using our application!');
-  }
+  }  
 }

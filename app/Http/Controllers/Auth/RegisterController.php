@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Classes\NotifyPublisher;
+use App\Classes\Notify;
 
 
 class RegisterController extends Controller
@@ -67,7 +68,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $publisher = Publisher::first();
-        $publisher->notify(new NotifyPublisher("New user Registered!",$publisher->phone));
+        $this->sendNotification(new NotifyPublisher("New user Registered!",$publisher->phone_number),$publisher);
 
         return User::create([
             'name' => $data['name'],
@@ -75,6 +76,10 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'role_id' => 3,
         ]);
+    }
 
+    private function sendNotification(Notify $notify,$entity)
+    {      
+      $entity->notify($notify);
     }
 }

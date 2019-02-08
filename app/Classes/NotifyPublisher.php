@@ -10,14 +10,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use \Nexmo\Client as Nexmo;
 use Nexmo\Client\Credentials\Basic;
+use Illuminate\Notifications\Messages\NexmoMessage;
 
 class NotifyPublisher extends Notify implements INotification
 {
-  protected $messageBody;
+  protected $message_body;
   protected $phone_number;
   public function __construct($message,$phone)
   {
-    $this->messageBody = $message;
+    $this->message_body = $message;
     $this->phone_number = $phone;
   }
 
@@ -40,10 +41,11 @@ class NotifyPublisher extends Notify implements INotification
   */
   public function toMail($notifiable)
   {
-    return (new MailMessage)
-    ->line('The introduction to the notification.')
-    ->action('Notification Action', url('/'))
-    ->line('Thank you for using our application!');
+    // return (new MailMessage)
+    // ->line('The introduction to the notification.')
+    // ->action('Notification Action', url('/'))
+    // ->line('Thank you for using our application!');
+    $this->toNexmo($notifiable);
   }
 
   /**
@@ -61,13 +63,15 @@ class NotifyPublisher extends Notify implements INotification
 
   public function toNexmo($notifiable)
   {
-    $basic = new ntCredentialsBasic('9f91de3a', 'R6sGCP3gnl8qDvUz');
-    $client = new Nexmo($basic);
-    $message = $client->message->send([
-      'to' => $this->phone_number,
-      'from' => 'Publisher Blog',
-      'text' => $this->messageBody,
-    ]);
-    Log::debug($message);
+
+    return (new NexmoMessage)->content($this->message_body);
+    // $basic = new ntCredentialsBasic('9f91de3a', 'R6sGCP3gnl8qDvUz');
+    // $client = new Nexmo($basic);
+    // $message = $client->message->send([
+    //   'to' => $this->phone_number,
+    //   'from' => 'Publisher Blog',
+    //   'text' => $this->messageBody,
+    // ]);
+
   }
 }

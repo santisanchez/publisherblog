@@ -42,7 +42,7 @@ return [
   'nexmo' => [
     'key' => '9f91de3a',
     'secret' => 'R6sGCP3gnl8qDvUz',
-    'sms_from' => 'Publisher Blog',
+    'sms_from' => '3022136907',
   ],
 
 ];

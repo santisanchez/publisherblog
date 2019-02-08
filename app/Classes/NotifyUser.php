@@ -39,10 +39,10 @@ class NotifyUser extends Notify implements INotification
    * @return \Illuminate\Notifications\Messages\MailMessage
    */
   public function toMail($notifiable)
-  {    
+  {
       return (new MailMessage)
                   ->line($this->notification_body)
                   ->action('See Post', url('posts/'.$this->postId))
                   ->line('Happy reading!');
-  }
+  }  
 }

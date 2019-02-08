@@ -10496,20 +10496,38 @@ a.text-dark:focus {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-.py-4 {
-  margin: 10px;
+main.py-4 {
+  margin: 0px;
+  padding: 0px;
 }
 
-td a {
-  display: block;
+.create-post {
+  background-color: #6c757d;
+}
+
+tr.create-post:hover {
+  background-color: #343a40;
 }
 
 a {
   text-decoration: none;
+  color: white;
 }
 
-tr:hover {
+a:hover {
+  color: gray;
+}
+
+tr.clickable-row:hover {
   color: #fff;
   background-color: #6574cd;
+}
+
+td {
+  text-align: center;
+}
+
+th {
+  text-align: center;
 }
 
