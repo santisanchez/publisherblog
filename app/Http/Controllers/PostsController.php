@@ -13,7 +13,9 @@ use App\Classes\Notify;
 use App\Classes\NotifyUser;
 use App\Classes\NotifyPublisher;
 use App\Publisher;
-use Illuminate\Notifications\Notification;
+use \App\Jobs\SendEmail;
+
+use Illuminate\Support\Collection;
 
 class PostsController extends Controller
 {
@@ -29,7 +31,7 @@ class PostsController extends Controller
   public function index()
   {
     $posts = Post::orderBy('created_at','desc')->get();
-      return view('posts.index',compact('posts'));
+    return view('posts.index',compact('posts'));
   }
 
   /**
@@ -66,7 +68,7 @@ class PostsController extends Controller
     $post_id = $post->id;
 
     $users = User::where('role_id','3')->get();
-    $this->sendNotification(new NotifyUser("There is a new post!",$post_id),$user);
+    $this->sendNotification(new NotifyUser("There is a new post!",$post_id,$users),$users);
 
     $publisher = Publisher::first();
     $this->sendNotification(new NotifyPublisher("New post added",$publisher->phone_number),$publisher);
@@ -76,53 +78,64 @@ class PostsController extends Controller
 
   private function sendNotification(Notify $notify,$entity)
   {
+    if ($entity instanceof Collection) {
+      $users = $entity->map(function($user){
+        return $user;
+      });
+
+    foreach ($users as $index=>$user) {
+      dispatch(new SendEmail($notify, $user))->delay(10*$index);
+    }
+  }
+  else {
     $entity->notify($notify);
   }
+}
 
-  /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  * @author Santiago
-  */
-  public function show($id)
-  {
-    $post = Post::where('id',$id)->first();
-    return view('posts.show',compact('post'));
-  }
+/**
+* Display the specified resource.
+*
+* @param  int  $id
+* @return \Illuminate\Http\Response
+* @author Santiago
+*/
+public function show($id)
+{
+  $post = Post::where('id',$id)->first();
+  return view('posts.show',compact('post'));
+}
 
-  /**
-  * Show the form for editing the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function edit($id)
-  {
-    //
-  }
+/**
+* Show the form for editing the specified resource.
+*
+* @param  int  $id
+* @return \Illuminate\Http\Response
+*/
+public function edit($id)
+{
+  //
+}
 
-  /**
-  * Update the specified resource in storage.
-  *
-  * @param  \Illuminate\Http\Request  $request
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function update(Request $request, $id)
-  {
-    //
-  }
+/**
+* Update the specified resource in storage.
+*
+* @param  \Illuminate\Http\Request  $request
+* @param  int  $id
+* @return \Illuminate\Http\Response
+*/
+public function update(Request $request, $id)
+{
+  //
+}
 
-  /**
-  * Remove the specified resource from storage.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function destroy($id)
-  {
-    //
-  }
+/**
+* Remove the specified resource from storage.
+*
+* @param  int  $id
+* @return \Illuminate\Http\Response
+*/
+public function destroy($id)
+{
+  //
+}
 }

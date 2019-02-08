@@ -41,10 +41,6 @@ class NotifyPublisher extends Notify implements INotification
   */
   public function toMail($notifiable)
   {
-    // return (new MailMessage)
-    // ->line('The introduction to the notification.')
-    // ->action('Notification Action', url('/'))
-    // ->line('Thank you for using our application!');
     $this->toNexmo($notifiable);
   }
 
@@ -63,15 +59,6 @@ class NotifyPublisher extends Notify implements INotification
 
   public function toNexmo($notifiable)
   {
-
     return (new NexmoMessage)->content($this->message_body);
-    // $basic = new ntCredentialsBasic('9f91de3a', 'R6sGCP3gnl8qDvUz');
-    // $client = new Nexmo($basic);
-    // $message = $client->message->send([
-    //   'to' => $this->phone_number,
-    //   'from' => 'Publisher Blog',
-    //   'text' => $this->messageBody,
-    // ]);
-
   }
 }

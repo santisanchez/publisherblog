@@ -6,8 +6,8 @@ use App\Classes\Notify;
 use App\Interfaces\INotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+
 
 class NotifyUser extends Notify implements INotification
 {
@@ -44,5 +44,5 @@ class NotifyUser extends Notify implements INotification
                   ->line($this->notification_body)
                   ->action('See Post', url('posts/'.$this->postId))
                   ->line('Happy reading!');
-  }  
+  }
 }
